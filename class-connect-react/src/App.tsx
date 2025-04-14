@@ -38,7 +38,7 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-let { data: danceClass, error } = await supabase
+let { data: danceClass, error: error1 } = await supabase
   .from("danceClassStorage")
   .select("classname,instructor,price,time,length")
   .eq("studio_name", "TMILLY")
@@ -46,15 +46,18 @@ let { data: danceClass, error } = await supabase
   .order("time", { ascending: true });
 
 if (!danceClass) {
-  throw new Error("Data came back null");
+  throw new Error(`Data came back null: ${JSON.stringify(error1)}`);
 }
-// danceClass.map((danceClass) => {
-//   console.log(danceClass.classname, danceClass.instructor);
-// });
+let { data: danceClass2, error: error2 } = await supabase
+  .from("danceClassStorage")
+  .select("classname,instructor,price,time,length")
+  .eq("studio_name", "MDC")
+  .eq("date", "2025-04-14")
+  .order("time", { ascending: true });
 
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-);
+if (!danceClass2) {
+  throw new Error(`Data came back null: ${JSON.stringify(error2)}`);
+}
 
 const App = () => {
   return (
@@ -92,6 +95,21 @@ const App = () => {
           <Separator className="w-full"></Separator>
           <div className="p-4">
             {danceClass.map((danceClass, index) => (
+              <div key={`${index}`} className="relative mb-2">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-sm text-left">{danceClass.time}</div>
+                  <div className="text-sm text-right">
+                    {danceClass.classname}
+                  </div>
+                  <div className="text-sm text-left">{danceClass.length}</div>
+                  <div className="text-sm text-right">
+                    {danceClass.instructor}
+                  </div>
+                </div>
+                <Separator className="mt-2" />
+              </div>
+            ))}
+            {danceClass2.map((danceClass, index) => (
               <div key={`${index}`} className="relative mb-2">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-sm text-left">{danceClass.time}</div>
