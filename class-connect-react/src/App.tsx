@@ -41,8 +41,8 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 let { data: danceClass, error } = await supabase
   .from("danceClassStorage")
   .select("classname,instructor,price,time,length")
-  .eq("studio_name", "MDC")
-  .eq("date", "2025-04-10")
+  .eq("studio_name", "TMILLY")
+  .eq("date", "2025-04-14")
   .order("time", { ascending: true });
 
 if (!danceClass) {
