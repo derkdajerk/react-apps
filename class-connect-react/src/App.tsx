@@ -1,33 +1,7 @@
-import { useState } from "react";
 import "./App.css";
 import { Button } from "@/components/ui/button";
-import {
-  Loader2,
-  SeparatorHorizontal,
-  SeparatorHorizontalIcon,
-  SeparatorVertical,
-} from "lucide-react";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
-} from "@/components/ui/navigation-menu";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import * as React from "react";
 import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? null;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY ?? null;
@@ -57,6 +31,17 @@ let { data: danceClass2, error: error2 } = await supabase
 
 if (!danceClass2) {
   throw new Error(`Data came back null: ${JSON.stringify(error2)}`);
+}
+
+let { data: danceClass3, error: error3 } = await supabase
+  .from("danceClassStorage")
+  .select("classname,instructor,price,time,length")
+  .eq("studio_name", "ML")
+  .eq("date", "2025-04-14")
+  .order("time", { ascending: true });
+
+if (!danceClass3) {
+  throw new Error(`Data came back null: ${JSON.stringify(error3)}`);
 }
 
 const App = () => {
@@ -94,10 +79,25 @@ const App = () => {
           </div>
           <Separator className="w-full"></Separator>
           <div className="p-4">
-            {danceClass.map((danceClass, index) => (
+            {danceClass2.map((danceClass, index) => (
               <div key={`${index}`} className="relative mb-2">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-sm text-left">{danceClass.time}</div>
+                  <div className="text-sm text-left">
+                    {danceClass.time[0] + danceClass.time[1] > 12
+                      ? danceClass.time[0] +
+                        danceClass.time[1] -
+                        12 +
+                        danceClass.time[2] +
+                        danceClass.time[3] +
+                        danceClass.time[4] +
+                        " PM"
+                      : danceClass.time[0] +
+                        danceClass.time[1] +
+                        danceClass.time[2] +
+                        danceClass.time[3] +
+                        danceClass.time[4] +
+                        " AM"}
+                  </div>
                   <div className="text-sm text-right">
                     {danceClass.classname}
                   </div>
@@ -109,10 +109,75 @@ const App = () => {
                 <Separator className="mt-2" />
               </div>
             ))}
-            {danceClass2.map((danceClass, index) => (
+          </div>
+        </ScrollArea>
+        <ScrollArea className="w-80 rounded-lg border">
+          <div className="pt-4 pb-4">
+            <h4 className=" text-sm font-medium leading-none text-center">
+              TMILLY
+            </h4>
+          </div>
+          <Separator className="w-full"></Separator>
+          <div className="p-4">
+            {danceClass.map((danceClass, index) => (
               <div key={`${index}`} className="relative mb-2">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-sm text-left">{danceClass.time}</div>
+                  <div className="text-sm text-left">
+                    {danceClass.time[0] + danceClass.time[1] > 12
+                      ? danceClass.time[0] +
+                        danceClass.time[1] -
+                        12 +
+                        danceClass.time[2] +
+                        danceClass.time[3] +
+                        danceClass.time[4] +
+                        " PM"
+                      : danceClass.time[0] +
+                        danceClass.time[1] +
+                        danceClass.time[2] +
+                        danceClass.time[3] +
+                        danceClass.time[4] +
+                        " AM"}
+                  </div>
+                  <div className="text-sm text-right">
+                    {danceClass.classname}
+                  </div>
+                  <div className="text-sm text-left">{danceClass.length}</div>
+                  <div className="text-sm text-right">
+                    {danceClass.instructor}
+                  </div>
+                </div>
+                <Separator className="mt-2" />
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+        <ScrollArea className="w-80 rounded-lg border">
+          <div className="pt-4 pb-4">
+            <h4 className=" text-sm font-medium leading-none text-center">
+              ML
+            </h4>
+          </div>
+          <Separator className="w-full"></Separator>
+          <div className="p-4">
+            {danceClass3.map((danceClass, index) => (
+              <div key={`${index}`} className="relative mb-2">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-sm text-left">
+                    {danceClass.time[0] + danceClass.time[1] > 12
+                      ? danceClass.time[0] +
+                        danceClass.time[1] -
+                        12 +
+                        danceClass.time[2] +
+                        danceClass.time[3] +
+                        danceClass.time[4] +
+                        " PM"
+                      : danceClass.time[0] +
+                        danceClass.time[1] +
+                        danceClass.time[2] +
+                        danceClass.time[3] +
+                        danceClass.time[4] +
+                        " AM"}
+                  </div>
                   <div className="text-sm text-right">
                     {danceClass.classname}
                   </div>
@@ -130,4 +195,5 @@ const App = () => {
     </main>
   );
 };
+
 export default App;
