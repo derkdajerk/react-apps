@@ -1,7 +1,19 @@
+/* eslint-disable no-unused-vars */
 import "./App.css";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@supabase/supabase-js";
 import ClassScrollBar from "@/components/classScrollBar.jsx";
+import CustomPagination from "./components/CustomPagination";
+import Search from "./components/Search.jsx";
+import { useDebounce } from "react-use";
+import { useState } from "react";
+
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MoreHorizontalIcon,
+} from "lucide-react";
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? null;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY ?? null;
 
@@ -44,6 +56,11 @@ if (!danceClassML) {
 }
 
 const App = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setdebouncedSearchTerm] = useState("");
+
+  useDebounce(() => setdebouncedSearchTerm(searchTerm), 750, [searchTerm]);
+
   return (
     <main className="h-screen flex flex-col">
       <div className="text-center p-2">
@@ -69,6 +86,12 @@ const App = () => {
           ML
         </Button>
       </div>
+      <Search
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        className="text-center"
+      />
+      <CustomPagination></CustomPagination>
       <div
         id="class-content"
         className="flex-1 flex justify-center pt-2 overflow-hidden"
