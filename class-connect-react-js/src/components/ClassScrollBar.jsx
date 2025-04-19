@@ -15,7 +15,7 @@ const formatTime = (time) => {
 
 const ClassScrollBar = ({ studioName, danceClassList }) => {
   return (
-    <ScrollArea className="w-80 rounded-lg border">
+    <ScrollArea className="w-100 rounded-lg border">
       <div className="pt-4 pb-4">
         <h4 className=" text-sm font-medium leading-none text-center">
           {studioName}

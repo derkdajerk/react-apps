@@ -40,7 +40,7 @@ const App = () => {
         .from("danceClassStorage")
         .select("class_id,classname,instructor,price,time,length")
         .eq("studio_name", "MDC")
-        .eq("date", "2025-04-14")
+        .eq("date", "2025-04-19")
         .order("time", { ascending: true });
       if (!danceClassMDC) {
         setDanceClassMDC([
@@ -58,7 +58,7 @@ const App = () => {
         .from("danceClassStorage")
         .select("class_id,classname,instructor,price,time,length")
         .eq("studio_name", "TMILLY")
-        .eq("date", "2025-04-14")
+        .eq("date", "2025-04-19")
         .order("time", { ascending: true });
       if (!danceClassTMILLY) {
         setDanceClassTMILLY([
@@ -76,7 +76,7 @@ const App = () => {
         .from("danceClassStorage")
         .select("class_id,classname,instructor,price,time,length")
         .eq("studio_name", "ML")
-        .eq("date", "2025-04-14")
+        .eq("date", "2025-04-19")
         .order("time", { ascending: true });
       if (!danceClassML) {
         setDanceClassML([
