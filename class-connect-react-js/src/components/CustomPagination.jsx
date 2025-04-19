@@ -9,6 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { cn } from "../lib/utils";
 
 const CustomPagination = () => {
   const today = new Date();
@@ -42,8 +43,8 @@ const CustomPagination = () => {
     // Answer(me): I would need to update the shown class lists too, i might either add those classscrollbars into this too or somehow alert the main page
   };
 
-  const handlePreviousClick = (e) => {
-    e.preventDefault();
+  const handlePreviousClick = () => {
+    // e.preventDefault();
     // Create new dates for the previous week
     const newStart = new Date(currentWeekStartDate);
     newStart.setDate(currentWeekStartDate.getDate() - 7);
@@ -57,8 +58,8 @@ const CustomPagination = () => {
     setSelectedIndex(0); // Reset selected date to first of new week
   };
 
-  const handleNextClick = (e) => {
-    e.preventDefault();
+  const handleNextClick = () => {
+    // e.preventDefault();
     // Create new dates for the previous week
     const newStart = new Date(currentWeekStartDate);
     newStart.setDate(currentWeekStartDate.getDate() + 7);
@@ -86,9 +87,12 @@ const CustomPagination = () => {
     <Pagination className="mt-5 mb-5">
       <PaginationContent className="gap-4">
         <PaginationPrevious
-          onClick={handlePreviousClick}
-          className="hover:cursor-pointer"
-          disabled={currentWeekStartDate.getTime() <= today.getTime()}
+          onClick={() => !isPreviousDisabled() && handlePreviousClick()}
+          className={cn(
+            "transition-all",
+            !isPreviousDisabled() && "hover:cursor-pointer hover:bg-accent",
+            isPreviousDisabled() && "pointer-events-none opacity-50"
+          )}
         />
         {dates.map((date, index) => (
           <PaginationItem key={date.toISOString()} className="w-25">
