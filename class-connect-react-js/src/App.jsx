@@ -20,13 +20,13 @@ const App = () => {
   useDebounce(() => setdebouncedSearchTerm(searchTerm), 750, [searchTerm]);
 
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col w-full">
       <div className="text-center p-6 max-md:p-2">
         <p className="text-lg max-md:text-sm">Hello welcome to ClassConnect!</p>
       </div>
       <div
         id="navbar"
-        className="text-center flex justify-center gap-6 max-md:gap-2 max-md:p-2"
+        className="text-center flex justify-center gap-6 w-full overflow-x-auto max-md:gap-2 max-md:p-2"
       >
         <Button
           className="bg-gradient-to-t from-gray-800 to-red-800"

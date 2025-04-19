@@ -3,7 +3,6 @@
 import React from "react";
 import ClassScrollBar from "@/components/classScrollBar.jsx";
 import { useState, useEffect, useCallback } from "react";
-import Spinner from "./Spinner";
 import {
   Pagination,
   PaginationContent,
@@ -172,7 +171,7 @@ const CustomPagination = () => {
   return (
     <div className="flex flex-col items-center w-full max-w-7xl mx-auto px-4 max-md:px-2">
       <Pagination className="mt-5">
-        <PaginationContent className="gap-4 bg-gray-300/20 rounded-3xl">
+        <PaginationContent className="gap-4 max-md:gap-2 bg-gray-300/20 rounded-3xl overflow-x-auto">
           <PaginationPrevious
             onClick={() => !isPreviousDisabled() && handlePreviousClick()}
             className={cn(
@@ -185,7 +184,10 @@ const CustomPagination = () => {
             <PaginationItem key={date.toISOString()} className="w-25">
               <PaginationLink
                 href="#"
-                className="w-25"
+                className={cn(
+                  "w-25 max-md:text-xs whitespace-nowrap",
+                  "px-4 max-md:px-2"
+                )}
                 isActive={index === selectedIndex}
                 onClick={() => handleDateClick(index, date)}
               >
@@ -209,11 +211,10 @@ const CustomPagination = () => {
       </Pagination>
       <div className="flex justify-center w-full mb-4">
         {isLoading ? <Progress value={progress} className="" /> : null}
-        {/* {isLoading ? <Spinner /> : null} */}
       </div>
       <div
         id="class-content"
-        className="flex-1 flex justify-center pt-2 overflow-hidden"
+        className="flex-1 flex justify-center pt-2 w-full min-w-25 overflow-x-auto"
       >
         <ClassScrollBar
           studioName="MDC"
@@ -233,3 +234,7 @@ const CustomPagination = () => {
 };
 
 export default CustomPagination;
+
+/**
+ 
+ */
