@@ -133,6 +133,9 @@ const App = () => {
         className="text-center"
       />
       <CustomPagination></CustomPagination>
+      <div id="temp-show" className="text-center">
+        <p>Only showing April 19th classes below, hardcoded right now.</p>
+      </div>
       <div
         id="class-content"
         className="flex-1 flex justify-center pt-2 overflow-hidden"
