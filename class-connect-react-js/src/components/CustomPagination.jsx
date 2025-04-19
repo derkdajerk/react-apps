@@ -11,7 +11,7 @@ import {
 
 const CustomPagination = () => {
   return (
-    <Pagination className="mt-5">
+    <Pagination className="mt-5 mb-5">
       <PaginationContent className="gap-6">
         <PaginationItem>
           <PaginationPrevious href="#" />

@@ -23,8 +23,8 @@ const ClassScrollBar = ({ studioName, danceClassList }) => {
       </div>
       <Separator className="w-full"></Separator>
       <div className="p-4">
-        {danceClassList.map((danceClass, index) => (
-          <div key={`${index}`} className="relative mb-2">
+        {danceClassList?.map((danceClass) => (
+          <div key={`${danceClass.class_id}`} className="relative mb-2">
             <div className="grid grid-cols-2 gap-4">
               <div className="text-sm text-left">
                 {formatTime(danceClass.time)}
