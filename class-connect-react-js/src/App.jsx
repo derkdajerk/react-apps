@@ -1,17 +1,10 @@
 /* eslint-disable no-unused-vars */
 import "./App.css";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@supabase/supabase-js";
-
 import CustomPagination from "./components/CustomPagination";
 import Search from "./components/Search.jsx";
 import { useDebounce } from "react-use";
 import { useState, useEffect } from "react";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  MoreHorizontalIcon,
-} from "lucide-react";
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -53,9 +46,6 @@ const App = () => {
         className="text-center"
       />
       <CustomPagination searchTerm={debouncedSearchTerm}></CustomPagination>
-      {/* <div id="temp-show" className="text-center">
-        <p>Only showing April 19th classes below, hardcoded right now.</p>
-      </div> */}
     </main>
   );
 };

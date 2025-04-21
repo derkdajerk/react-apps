@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import React from "react";
 import ClassScrollBar from "@/components/classScrollBar.jsx";
 import { useState, useEffect, useCallback } from "react";
@@ -302,7 +301,3 @@ const CustomPagination = ({ searchTerm }) => {
 };
 
 export default CustomPagination;
-
-/**
- 
- */
