@@ -52,7 +52,7 @@ const App = () => {
         setSearchTerm={setSearchTerm}
         className="text-center"
       />
-      <CustomPagination></CustomPagination>
+      <CustomPagination searchTerm={debouncedSearchTerm}></CustomPagination>
       {/* <div id="temp-show" className="text-center">
         <p>Only showing April 19th classes below, hardcoded right now.</p>
       </div> */}

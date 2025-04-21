@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
+
 import React from "react";
 import ClassScrollBar from "@/components/classScrollBar.jsx";
 import { useState, useEffect, useCallback } from "react";
@@ -23,7 +23,7 @@ if (!supabaseUrl || !supabaseKey) {
 }
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const CustomPagination = () => {
+const CustomPagination = ({ searchTerm }) => {
   const today = new Date();
   const endOfWeek = new Date(today);
   endOfWeek.setDate(today.getDate() + 6);
@@ -34,7 +34,6 @@ const CustomPagination = () => {
   const [currentWeekEndDate, setCurrentWeekEndDate] = useState(endOfWeek);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [danceClassMDC, setDanceClassMDC] = useState([]);
   const [danceClassTMILLY, setDanceClassTMILLY] = useState([]);
   const [danceClassML, setDanceClassML] = useState([]);
@@ -77,13 +76,17 @@ const CustomPagination = () => {
   }, [generateWeekDates]);
 
   useEffect(() => {
-    if (dates.length > 0) {
-      const formattedDate = dates[selectedIndex].toISOString().split("T")[0];
-      loadClasses(formattedDate);
+    if (!searchTerm || searchTerm.trim() === "") {
+      if (dates.length > 0) {
+        const formattedDate = dates[selectedIndex].toISOString().split("T")[0];
+        loadClassesByDate(formattedDate);
+      }
+    } else {
+      loadClassesBySearch(searchTerm);
     }
-  }, [selectedIndex, dates]);
+  }, [selectedIndex, dates, searchTerm]);
 
-  const handleDateClick = (index, date) => {
+  const handleDateClick = (index) => {
     setSelectedIndex(index);
   };
 
@@ -126,15 +129,37 @@ const CustomPagination = () => {
     return currentWeekEndDate.getTime() >= threeWeeksFromToday.getTime();
   }, [currentWeekEndDate]);
 
-  const fetchStudioClasses = async (studioName, date) => {
-    const { data, error } = await supabase
-      .from("danceClassStorage")
-      .select("class_id,classname,instructor,price,time,length")
-      .eq("studio_name", studioName)
-      .eq("date", date)
-      .order("time", { ascending: true });
+  const fetchStudioClassesBySearch = async (studioName, searchTerm) => {
+    try {
+      let query = supabase
+        .from("danceClassStorage")
+        .select("class_id,classname,instructor,price,time,length,date")
+        .eq("studio_name", studioName);
 
-    if (!data) {
+      if (searchTerm && searchTerm.trim() !== "") {
+        query = query.or(
+          `classname.ilike.%${searchTerm.trim()}%,instructor.ilike.%${searchTerm.trim()}%`
+        );
+      }
+
+      query = query.order("date", { ascending: true });
+      const { data, error } = await query;
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        return [
+          {
+            classname: "No classes found.",
+            instructor: "Try a different search.",
+            length: "N/A",
+            price: "N/A",
+            time: "02:00:00",
+          },
+        ];
+      }
+      return data;
+    } catch (error) {
+      console.error("Search query error:", error);
       return [
         {
           classname: "Error loading classes.",
@@ -145,24 +170,64 @@ const CustomPagination = () => {
         },
       ];
     }
+  };
+
+  const fetchStudioClassesByDate = async (studioName, date) => {
+    const { data, error } = await supabase
+      .from("danceClassStorage")
+      .select("class_id,classname,instructor,price,time,length")
+      .eq("studio_name", studioName)
+      .eq("date", date)
+      .order("time", { ascending: true });
+
+    if (error) {
+      console.error(`Error finding teacher: ${error}`);
+    }
+    if (!data) {
+      return [
+        {
+          classname: "Error loading classes.",
+          instructor: "Try again later.",
+          length: "N/A",
+          price: "N/A",
+          time: "00:00:00",
+        },
+      ];
+    }
     return data;
   };
 
-  const loadClasses = async (date) => {
+  const loadClassesBySearch = async (searchTerm) => {
     setIsLoading(true);
-    setErrorMessage("");
     try {
       const [mdcClasses, tmillyClasses, mlClasses] = await Promise.all([
-        fetchStudioClasses("MDC", date),
-        fetchStudioClasses("TMILLY", date),
-        fetchStudioClasses("ML", date),
+        fetchStudioClassesBySearch("MDC", searchTerm),
+        fetchStudioClassesBySearch("TMILLY", searchTerm),
+        fetchStudioClassesBySearch("ML", searchTerm),
+      ]);
+      setDanceClassMDC(mdcClasses);
+      setDanceClassTMILLY(tmillyClasses);
+      setDanceClassML(mlClasses);
+    } catch (error) {
+      console.error(`Error finding teacher: ${error}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadClassesByDate = async (date) => {
+    setIsLoading(true);
+    try {
+      const [mdcClasses, tmillyClasses, mlClasses] = await Promise.all([
+        fetchStudioClassesByDate("MDC", date),
+        fetchStudioClassesByDate("TMILLY", date),
+        fetchStudioClassesByDate("ML", date),
       ]);
       setDanceClassMDC(mdcClasses);
       setDanceClassTMILLY(tmillyClasses);
       setDanceClassML(mlClasses);
     } catch (error) {
       console.error(`Error fetching classes: ${error}`);
-      setErrorMessage(`Error fetching classes: ${error}, try again later`);
     } finally {
       setIsLoading(false);
     }
@@ -223,6 +288,7 @@ const CustomPagination = () => {
         <ClassScrollBar
           studioName="TMILLY"
           danceClassList={danceClassTMILLY}
+          isSearchTerm={!searchTerm || searchTerm.trim() === "" ? false : true}
         ></ClassScrollBar>
         <ClassScrollBar
           studioName="ML"
