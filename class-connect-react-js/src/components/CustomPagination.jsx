@@ -284,6 +284,7 @@ const CustomPagination = ({ searchTerm }) => {
         <ClassScrollBar
           studioName="MDC"
           danceClassList={danceClassMDC}
+          isSearchTerm={!searchTerm || searchTerm.trim() === "" ? false : true}
         ></ClassScrollBar>
         <ClassScrollBar
           studioName="TMILLY"
@@ -293,6 +294,7 @@ const CustomPagination = ({ searchTerm }) => {
         <ClassScrollBar
           studioName="ML"
           danceClassList={danceClassML}
+          isSearchTerm={!searchTerm || searchTerm.trim() === "" ? false : true}
         ></ClassScrollBar>
       </div>
     </div>
