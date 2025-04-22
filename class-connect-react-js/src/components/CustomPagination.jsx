@@ -13,6 +13,7 @@ import {
 import { cn } from "../lib/utils";
 import { createClient } from "@supabase/supabase-js";
 import { Progress } from "@/components/ui/progress";
+import { ComboboxDemo } from "./ComboBoxTimeStart";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? null;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY ?? null;
@@ -79,7 +80,6 @@ const CustomPagination = ({ searchTerm }) => {
       if (dates.length > 0 && dates[selectedIndex]) {
         const localDate = new Date(dates[selectedIndex]);
         const formattedDate = localDate.toLocaleDateString("en-CA");
-
         // debugging
         // console.log("Local date:", localDate);
         // console.log("Formatted date:", formattedDate);
@@ -279,6 +279,9 @@ const CustomPagination = ({ searchTerm }) => {
           />
         </PaginationContent>
       </Pagination>
+      <div id="timeboxes" className="mt-4">
+        <ComboboxDemo></ComboboxDemo>
+      </div>
       <div className="flex justify-center w-full mb-4">
         {isLoading ? <Progress value={progress} className="" /> : null}
       </div>
