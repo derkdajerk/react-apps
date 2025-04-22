@@ -77,13 +77,12 @@ const CustomPagination = ({ searchTerm }) => {
   useEffect(() => {
     if (!searchTerm || searchTerm.trim() === "") {
       if (dates.length > 0 && dates[selectedIndex]) {
-        // Create a new date object and set it to midnight in local time
         const localDate = new Date(dates[selectedIndex]);
-        const formattedDate = localDate.toLocaleDateString("en-CA"); // Returns YYYY-MM-DD format
+        const formattedDate = localDate.toLocaleDateString("en-CA");
 
-        // For debugging
-        console.log("Local date:", localDate);
-        console.log("Formatted date:", formattedDate);
+        // debugging
+        // console.log("Local date:", localDate);
+        // console.log("Formatted date:", formattedDate);
 
         loadClassesByDate(formattedDate);
       }
@@ -179,7 +178,6 @@ const CustomPagination = ({ searchTerm }) => {
   };
 
   const fetchStudioClassesByDate = async (studioName, date) => {
-    // console.log(date);
     const { data, error } = await supabase
       .from("danceClassStorage")
       .select("class_id,classname,instructor,price,time,length,date")
