@@ -47,6 +47,7 @@ const ClassScrollBar = ({ studioName, danceClassList, isSearchTerm }) => (
             </div>
             <div className="text-sm text-center text-gray-500">
               {isSearchTerm ? formatDate(danceClass.date) : ""}
+              {/* {formatDate(danceClass.date)} */}
             </div>
             <div className="text-sm text-right font-semibold text-gray-600">
               {danceClass.instructor}
