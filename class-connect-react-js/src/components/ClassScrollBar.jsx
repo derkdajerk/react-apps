@@ -14,7 +14,8 @@ const formatTime = (time) => {
 };
 
 const formatDate = (dateString) => {
-  const date = new Date(dateString);
+  const date = new Date(dateString + "T00:00:00");
+  date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
   return date.toLocaleDateString("en-US", {
     weekday: "short",
     month: "short",

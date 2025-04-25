@@ -14,8 +14,8 @@ const App = () => {
 
   return (
     <main className="min-h-screen flex flex-col w-full">
-      <div className="text-center p-6 max-md:p-2">
-        <p className="text-lg max-md:text-sm">Hello welcome to ClassConnect!</p>
+      <div className="text-center p-3 max-md:p-2">
+        <p className="text-2xl max-md:text-sm font-bold">ClassConnect</p>
       </div>
       <div
         id="navbar"

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import ClassScrollBar from "@/components/classScrollBar.jsx";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -13,7 +13,8 @@ import {
 import { cn } from "../lib/utils";
 import { createClient } from "@supabase/supabase-js";
 import { Progress } from "@/components/ui/progress";
-import { ComboboxDemo } from "./ComboBoxTimeStart";
+import { ComboboxTimeStart } from "./ComboBoxTimeStart";
+import { ComboboxTimeEnd } from "./ComboBoxTimeEnd";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? null;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY ?? null;
@@ -59,21 +60,17 @@ const CustomPagination = ({ searchTerm }) => {
     };
   }, [isLoading]);
 
-  const generateWeekDates = useCallback(
-    (startDate = currentWeekStartDate) => {
-      const weekDates = Array.from({ length: 7 }, (_, i) => {
-        const date = new Date(startDate);
-        date.setDate(startDate.getDate() + i);
-        return date;
-      });
-      return weekDates;
-    },
-    [currentWeekStartDate]
-  );
+  const weekDates = useMemo(() => {
+    return Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(currentWeekStartDate);
+      date.setDate(currentWeekStartDate.getDate() + i);
+      return date;
+    });
+  }, [currentWeekStartDate]);
 
   useEffect(() => {
-    setDates(generateWeekDates(currentWeekStartDate));
-  }, [generateWeekDates]);
+    setDates(weekDates);
+  }, [weekDates]);
 
   useEffect(() => {
     if (!searchTerm || searchTerm.trim() === "") {
@@ -280,7 +277,8 @@ const CustomPagination = ({ searchTerm }) => {
         </PaginationContent>
       </Pagination>
       <div id="timeboxes" className="mt-4">
-        <ComboboxDemo></ComboboxDemo>
+        <ComboboxTimeStart></ComboboxTimeStart>
+        <ComboboxTimeEnd></ComboboxTimeEnd>
       </div>
       <div className="flex justify-center w-full mb-4">
         {isLoading ? <Progress value={progress} className="" /> : null}

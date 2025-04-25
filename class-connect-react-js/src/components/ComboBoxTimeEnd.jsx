@@ -29,7 +29,7 @@ const generateTimes = () => {
   return timesList;
 };
 
-export function ComboboxTimeStart() {
+export function ComboboxTimeEnd() {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
@@ -53,7 +53,7 @@ export function ComboboxTimeStart() {
         >
           {value
             ? timeOptions.find((time) => time.value === value)?.label
-            : "Select start time..."}
+            : "Select end time..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
