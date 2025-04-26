@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import "./App.css";
 import { Button } from "@/components/ui/button";
-// import CustomPagination from "./components/CustomPagination";
 import Search from "./components/Search.jsx";
 import { useDebounce } from "react-use";
 import { useState, useEffect } from "react";
 import AllPageContent from "./components/AllPageContent";
+import { Toaster } from "@/components/ui/sonner";
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,6 +47,13 @@ const App = () => {
         className="text-center"
       />
       <AllPageContent searchTerm={debouncedSearchTerm}></AllPageContent>
+      <Toaster
+        richColors
+        expand={false}
+        closeButton={true}
+        position="bottom-center"
+        duration={3000}
+      />
     </main>
   );
 };

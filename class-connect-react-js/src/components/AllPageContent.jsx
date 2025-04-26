@@ -1,14 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Pagination } from "@/components/ui/pagination";
 import { Progress } from "@/components/ui/progress";
-import { ComboboxTimeStart } from "./ComboBoxTimeStart";
-import { ComboboxTimeEnd } from "./ComboBoxTimeEnd";
 import DateNavigation from "./DateNavigation";
 import ClassContent from "./ClassContent";
 import {
   fetchStudioClassesBySearch,
   fetchStudioClassesByDate,
 } from "./SupabaseCalls";
+import { TimeRangeSelector } from "./TimeRangeSelector";
 
 const AllPageContent = ({ searchTerm }) => {
   const today = new Date();
@@ -24,6 +24,7 @@ const AllPageContent = ({ searchTerm }) => {
   const [danceClassMDC, setDanceClassMDC] = useState([]);
   const [danceClassTMILLY, setDanceClassTMILLY] = useState([]);
   const [danceClassML, setDanceClassML] = useState([]);
+  const [timeRange, setTimeRange] = useState({ start: "", end: "" });
 
   useEffect(() => {
     let intervalId;
@@ -153,6 +154,22 @@ const AllPageContent = ({ searchTerm }) => {
     }
   };
 
+  const handleTimeChange = ({ start, end }) => {
+    setTimeRange({ start, end });
+  };
+
+  useEffect(() => {
+    if (timeRange.start && timeRange.end) {
+      // If we have both times, reload classes with time filter
+      if (searchTerm) {
+        loadClassesBySearch(searchTerm);
+      } else if (dates.length > 0 && dates[selectedIndex]) {
+        const formattedDate = dates[selectedIndex].toLocaleDateString("en-CA");
+        loadClassesByDate(formattedDate);
+      }
+    }
+  }, [timeRange]);
+
   return (
     <div className="flex flex-col items-center w-full max-w-7xl mx-auto px-4 max-md:px-2">
       <Pagination className="mt-5">
@@ -168,8 +185,7 @@ const AllPageContent = ({ searchTerm }) => {
       </Pagination>
 
       <div id="timeboxes" className="mt-4">
-        <ComboboxTimeStart />
-        <ComboboxTimeEnd />
+        <TimeRangeSelector onTimeChange={handleTimeChange} />
       </div>
 
       <div className="flex justify-center w-full mb-4">
