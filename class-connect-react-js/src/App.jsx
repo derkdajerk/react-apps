@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 import "./App.css";
 import { Button } from "@/components/ui/button";
-import CustomPagination from "./components/CustomPagination";
+// import CustomPagination from "./components/CustomPagination";
 import Search from "./components/Search.jsx";
 import { useDebounce } from "react-use";
 import { useState, useEffect } from "react";
+import AllPageContent from "./components/AllPageContent";
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,7 +46,7 @@ const App = () => {
         setSearchTerm={setSearchTerm}
         className="text-center"
       />
-      <CustomPagination searchTerm={debouncedSearchTerm}></CustomPagination>
+      <AllPageContent searchTerm={debouncedSearchTerm}></AllPageContent>
     </main>
   );
 };
