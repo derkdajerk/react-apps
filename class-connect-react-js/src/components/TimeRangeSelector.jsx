@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import * as React from "react";
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -63,7 +62,12 @@ export function TimeRangeSelector({ onTimeChange }) {
 
     setStartValue(newStartValue);
     setStartOpen(false);
-    onTimeChange({ start: newStartValue, end: endValue });
+    if (
+      (newStartValue && endValue) ||
+      (newStartValue === "" && endValue === "")
+    ) {
+      onTimeChange({ start: newStartValue, end: endValue });
+    }
   };
 
   const handleEndTimeSelect = (currentValue) => {
@@ -78,98 +82,121 @@ export function TimeRangeSelector({ onTimeChange }) {
 
     setEndValue(newEndValue);
     setEndOpen(false);
-    onTimeChange({ start: startValue, end: newEndValue });
+    if (
+      (startValue && newEndValue) ||
+      (startValue === "" && newEndValue === "")
+    ) {
+      onTimeChange({ start: startValue, end: newEndValue });
+    }
+  };
+
+  const clearTimeRange = () => {
+    setStartValue("");
+    setEndValue("");
+    // Always notify parent when clearing
+    onTimeChange({ start: "", end: "" });
   };
 
   return (
-    <div className="flex gap-4">
-      {/* Start Time Selector */}
-      <Popover open={startOpen} onOpenChange={setStartOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[200px] justify-between"
-          >
-            {startValue
-              ? timeOptions.find((time) => time.value === startValue)?.label
-              : "Select start time..."}
-            <ChevronsUpDown className="opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
-            <CommandInput placeholder="Search times..." className="h-9" />
-            <CommandList>
-              <CommandEmpty>No time found.</CommandEmpty>
-              <CommandGroup>
-                {timeOptions.map((time) => (
-                  <CommandItem
-                    key={time.value}
-                    value={time.value}
-                    onSelect={(currentValue) => {
-                      handleStartTimeSelect(currentValue);
-                    }}
-                  >
-                    {time.label}
-                    <Check
-                      className={cn(
-                        "ml-auto",
-                        startValue === time.value ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+    <>
+      <div className="flex gap-4">
+        {/* Start Time Selector */}
+        <Popover open={startOpen} onOpenChange={setStartOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-[200px] justify-between"
+            >
+              {startValue
+                ? timeOptions.find((time) => time.value === startValue)?.label
+                : "Select start time..."}
+              <ChevronsUpDown className="opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Search times..." className="h-9" />
+              <CommandList>
+                <CommandEmpty>No time found.</CommandEmpty>
+                <CommandGroup>
+                  {timeOptions.map(({ value, label }) => (
+                    <CommandItem
+                      key={value}
+                      value={value}
+                      onSelect={(label) => {
+                        handleStartTimeSelect(label);
+                      }}
+                    >
+                      {label}
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          startValue === value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
 
-      {/* End Time Selector */}
-      <Popover open={endOpen} onOpenChange={setEndOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[200px] justify-between"
-          >
-            {endValue
-              ? timeOptions.find((time) => time.value === endValue)?.label
-              : "Select end time..."}
-            <ChevronsUpDown className="opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
-            <CommandInput placeholder="Search times..." className="h-9" />
-            <CommandList>
-              <CommandEmpty>No time found.</CommandEmpty>
-              <CommandGroup>
-                {timeOptions.map((time) => (
-                  <CommandItem
-                    key={time.value}
-                    value={time.value}
-                    onSelect={(currentValue) => {
-                      handleEndTimeSelect(currentValue);
-                    }}
-                  >
-                    {time.label}
-                    <Check
-                      className={cn(
-                        "ml-auto",
-                        endValue === time.value ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
+        {/* End Time Selector */}
+        <Popover open={endOpen} onOpenChange={setEndOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-[200px] justify-between"
+            >
+              {endValue
+                ? timeOptions.find((time) => time.value === endValue)?.label
+                : "Select end time..."}
+              <ChevronsUpDown className="opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Search times..." className="h-9" />
+              <CommandList>
+                <CommandEmpty>No time found.</CommandEmpty>
+                <CommandGroup>
+                  {timeOptions.map(({ value, label }) => (
+                    <CommandItem
+                      key={value}
+                      value={value}
+                      onSelect={(label) => {
+                        handleEndTimeSelect(label);
+                      }}
+                    >
+                      {label}
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          endValue === value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div className="flex gap-4 justify-center mt-2">
+        <Button
+          variant="secondary"
+          className="bg-gray-400 hover:bg-gray-500 hover:font-bold"
+          onClick={clearTimeRange}
+        >
+          Clear
+        </Button>
+      </div>
+    </>
   );
 }

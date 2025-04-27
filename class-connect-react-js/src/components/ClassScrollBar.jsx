@@ -54,7 +54,7 @@ const ClassScrollBar = ({ studioName, danceClassList, isSearchTerm }) => (
               {danceClass.instructor}
             </div>
           </div>
-          <Separator className="mt-2" />
+          <Separator key={danceClass.class_id} className="mt-2" />
         </div>
       ))}
     </div>

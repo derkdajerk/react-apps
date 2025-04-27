@@ -9,7 +9,11 @@ if (!supabaseUrl || !supabaseKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export const fetchStudioClassesBySearch = async (studioName, searchTerm) => {
+export const fetchStudioClassesBySearchAndTime = async (
+  studioName,
+  searchTerm,
+  timeRange
+) => {
   try {
     let query = supabase
       .from("danceClassStorage")
@@ -20,6 +24,13 @@ export const fetchStudioClassesBySearch = async (studioName, searchTerm) => {
       query = query.or(
         `classname.ilike.%${searchTerm.trim()}%,instructor.ilike.%${searchTerm.trim()}%`
       );
+    }
+
+    if (timeRange.start) {
+      query = query.gte("time", timeRange.start);
+    }
+    if (timeRange.end) {
+      query = query.lte("time", timeRange.end);
     }
 
     query = query.order("date", { ascending: true });
@@ -52,14 +63,28 @@ export const fetchStudioClassesBySearch = async (studioName, searchTerm) => {
   }
 };
 
-export const fetchStudioClassesByDate = async (studioName, date) => {
-  const { data, error } = await supabase
+export const fetchStudioClassesByDateAndTime = async (
+  studioName,
+  date,
+  timeRange
+) => {
+  let query = supabase
     .from("danceClassStorage")
-    .select("class_id,classname,instructor,price,time,length,date")
+    .select("*")
     .eq("studio_name", studioName)
-    .eq("date", date)
-    .order("time", { ascending: true });
+    .eq("date", date);
 
+  // Add time range filtering if provided
+  if (timeRange.start) {
+    query = query.gte("time", timeRange.start);
+  }
+  if (timeRange.end) {
+    query = query.lte("time", timeRange.end);
+  }
+
+  query = query.order("time", { ascending: true });
+
+  const { data, error } = await query;
   if (error) {
     console.error(`Error finding teacher: ${error}`);
   }

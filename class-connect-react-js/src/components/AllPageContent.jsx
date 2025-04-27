@@ -5,8 +5,8 @@ import { Progress } from "@/components/ui/progress";
 import DateNavigation from "./DateNavigation";
 import ClassContent from "./ClassContent";
 import {
-  fetchStudioClassesBySearch,
-  fetchStudioClassesByDate,
+  fetchStudioClassesBySearchAndTime,
+  fetchStudioClassesByDateAndTime,
 } from "./SupabaseCalls";
 import { TimeRangeSelector } from "./TimeRangeSelector";
 
@@ -68,10 +68,10 @@ const AllPageContent = ({ searchTerm }) => {
         // console.log("Local date:", localDate);
         // console.log("Formatted date:", formattedDate);
 
-        loadClassesByDate(formattedDate);
+        loadClassesByDateAndTime(formattedDate, timeRange);
       }
     } else {
-      loadClassesBySearch(searchTerm);
+      loadClassesBySearchAndTime(searchTerm, timeRange);
     }
   }, [selectedIndex, dates, searchTerm]);
 
@@ -118,13 +118,13 @@ const AllPageContent = ({ searchTerm }) => {
     return currentWeekEndDate.getTime() >= threeWeeksFromToday.getTime();
   }, [currentWeekEndDate]);
 
-  const loadClassesBySearch = async (searchTerm) => {
+  const loadClassesBySearchAndTime = async (searchTerm) => {
     setIsLoading(true);
     try {
       const [mdcClasses, tmillyClasses, mlClasses] = await Promise.all([
-        fetchStudioClassesBySearch("MDC", searchTerm),
-        fetchStudioClassesBySearch("TMILLY", searchTerm),
-        fetchStudioClassesBySearch("ML", searchTerm),
+        fetchStudioClassesBySearchAndTime("MDC", searchTerm, timeRange),
+        fetchStudioClassesBySearchAndTime("TMILLY", searchTerm, timeRange),
+        fetchStudioClassesBySearchAndTime("ML", searchTerm, timeRange),
       ]);
       setDanceClassMDC(mdcClasses);
       setDanceClassTMILLY(tmillyClasses);
@@ -136,13 +136,13 @@ const AllPageContent = ({ searchTerm }) => {
     }
   };
 
-  const loadClassesByDate = async (date) => {
+  const loadClassesByDateAndTime = async (date) => {
     setIsLoading(true);
     try {
       const [mdcClasses, tmillyClasses, mlClasses] = await Promise.all([
-        fetchStudioClassesByDate("MDC", date),
-        fetchStudioClassesByDate("TMILLY", date),
-        fetchStudioClassesByDate("ML", date),
+        fetchStudioClassesByDateAndTime("MDC", date, timeRange),
+        fetchStudioClassesByDateAndTime("TMILLY", date, timeRange),
+        fetchStudioClassesByDateAndTime("ML", date, timeRange),
       ]);
       setDanceClassMDC(mdcClasses);
       setDanceClassTMILLY(tmillyClasses);
@@ -156,19 +156,33 @@ const AllPageContent = ({ searchTerm }) => {
 
   const handleTimeChange = ({ start, end }) => {
     setTimeRange({ start, end });
+    console.log(`start: ${start} end: ${end}`);
+
+    // Only reload if both times are set or both are cleared
+    if ((start && end) || (start === "" && end === "")) {
+      if (searchTerm) {
+        loadClassesBySearchAndTime(searchTerm);
+      } else if (dates.length > 0 && dates[selectedIndex]) {
+        const formattedDate = dates[selectedIndex].toLocaleDateString("en-CA");
+        loadClassesByDateAndTime(formattedDate);
+      }
+    }
   };
 
   useEffect(() => {
-    if (timeRange.start && timeRange.end) {
-      // If we have both times, reload classes with time filter
+    // Only proceed if both times are selected or both are empty
+    if (
+      (timeRange.start && timeRange.end) ||
+      (timeRange.start === "" && timeRange.end === "")
+    ) {
       if (searchTerm) {
-        loadClassesBySearch(searchTerm);
+        loadClassesBySearchAndTime(searchTerm);
       } else if (dates.length > 0 && dates[selectedIndex]) {
         const formattedDate = dates[selectedIndex].toLocaleDateString("en-CA");
-        loadClassesByDate(formattedDate);
+        loadClassesByDateAndTime(formattedDate);
       }
     }
-  }, [timeRange]);
+  }, [timeRange, searchTerm, dates, selectedIndex]);
 
   return (
     <div className="flex flex-col items-center w-full max-w-7xl mx-auto px-4 max-md:px-2">
