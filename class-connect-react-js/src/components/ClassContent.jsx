@@ -4,9 +4,16 @@ const ClassContent = ({
   danceClassMDC,
   danceClassTMILLY,
   danceClassML,
+  danceClassEIGHTYEIGHT,
+  danceClassPLAYGROUND,
   searchTerm,
 }) => (
-  <div className="flex-1 flex justify-center pt-2 w-full min-w-25 overflow-x-auto">
+  <div className="flex-1 flex justify-center pt-2 w-full min-w-25 overflow-x-auto mx-10">
+    <ClassScrollBar
+      studioName="PLAYGROUND"
+      danceClassList={danceClassPLAYGROUND}
+      isSearchTerm={Boolean(searchTerm?.trim())}
+    />
     <ClassScrollBar
       studioName="MDC"
       danceClassList={danceClassMDC}
@@ -20,6 +27,11 @@ const ClassContent = ({
     <ClassScrollBar
       studioName="ML"
       danceClassList={danceClassML}
+      isSearchTerm={Boolean(searchTerm?.trim())}
+    />
+    <ClassScrollBar
+      studioName="EIGHTYEIGHT"
+      danceClassList={danceClassEIGHTYEIGHT}
       isSearchTerm={Boolean(searchTerm?.trim())}
     />
   </div>

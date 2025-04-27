@@ -1,6 +1,7 @@
 import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "./ui/separator";
+import { cn } from "../lib/utils";
 
 const formatTime = (time) => {
   const hours = parseInt(time.slice(0, 2));
@@ -34,23 +35,29 @@ const ClassScrollBar = ({ studioName, danceClassList, isSearchTerm }) => (
     <div className="p-4">
       {danceClassList?.map((danceClass) => (
         <div key={danceClass.class_id} className="relative mb-4">
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="text-sm text-left">
-              {formatTime(danceClass.time)}
-            </div>
-            <div className="text-sm text-right font-medium">
+          <div className="text-sm grid grid-cols-3 gap-4 mb-4">
+            <div className=" text-left">{formatTime(danceClass.time)}</div>
+            <div className=" text-right font-medium col-start-2 col-span-3">
               {danceClass.classname}
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-2">
-            <div className="text-sm text-left text-gray-500">
-              {danceClass.length}
-            </div>
-            <div className="text-sm text-center text-gray-500">
-              {isSearchTerm ? formatDate(danceClass.date) : ""}
-              {/* {formatDate(danceClass.date)} */}
-            </div>
-            <div className="text-sm text-right font-semibold text-gray-600">
+          <div className="text-sm grid grid-cols-3 gap-2">
+            <div className="text-gray-500">{danceClass.length}</div>
+            {isSearchTerm ? (
+              <div className=" text-center text-gray-500">
+                {formatDate(danceClass.date)}
+              </div>
+            ) : (
+              ""
+            )}
+            <div
+              className={cn(
+                "flex justify-end text-right font-semibold text-gray-600",
+                isSearchTerm
+                  ? "col-start-3 col-span-1"
+                  : "col-start-2 col-span-2"
+              )}
+            >
               {danceClass.instructor}
             </div>
           </div>
