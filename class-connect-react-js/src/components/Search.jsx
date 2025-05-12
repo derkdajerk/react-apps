@@ -15,7 +15,7 @@ const Search = ({ searchTerm, setSearchTerm }) => {
       <input
         className="bg-gray-300 w-full px-4 py-3 rounded-lg max-w-3xl mx-auto"
         type="text"
-        placeholder="Search Teachers"
+        placeholder="Search Teachers/Classes"
         value={searchTerm}
         onChange={(event) => setSearchTerm(event.target.value)}
       />
