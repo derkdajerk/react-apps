@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "./ui/separator";
 import { cn } from "../lib/utils";
@@ -24,48 +24,64 @@ const formatDate = (dateString) => {
   });
 };
 
-const ClassScrollBar = ({ studioName, danceClassList, isSearchTerm }) => (
-  <ScrollArea className="w-75 rounded-lg border overflow-hidden">
-    <div className="pt-4 pb-4">
-      <h4 className="text-sm font-medium leading-none text-center">
-        {studioName}
-      </h4>
-    </div>
-    <Separator className="w-full" />
-    <div className="p-4">
-      {danceClassList?.map((danceClass) => (
-        <div key={danceClass.class_id} className="relative mb-4">
-          <div className="text-sm grid grid-cols-3 gap-4 mb-4">
-            <div className=" text-left">{formatTime(danceClass.time)}</div>
-            <div className=" text-right font-medium col-start-2 col-span-3">
-              {danceClass.classname}
-            </div>
-          </div>
-          <div className="text-sm grid grid-cols-3 gap-2">
-            <div className="text-gray-500">{danceClass.length}</div>
-            {isSearchTerm ? (
-              <div className=" text-center text-gray-500">
-                {formatDate(danceClass.date)}
+const ClassScrollBar = ({ studioName, danceClassList, isSearchTerm }) => {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <ScrollArea className="w-75 rounded-lg border overflow-hidden">
+      <div className="pt-4 pb-4">
+        <h4 className="text-sm font-medium leading-none text-center flex items-center justify-center">
+          <img
+            src={`/${studioName}.webp`}
+            // alt={studioName}
+            width={50}
+            height={50}
+            className="mx-2 "
+            onError={() => {
+              if (!imgError) {
+                setImgError(true);
+              }
+            }}
+          />
+          {studioName}
+        </h4>
+      </div>
+      <Separator className="w-full" />
+      <div className="p-4">
+        {danceClassList?.map((danceClass) => (
+          <div key={danceClass.class_id} className="relative mb-4">
+            <div className="text-sm grid grid-cols-3 gap-4 mb-4">
+              <div className=" text-left">{formatTime(danceClass.time)}</div>
+              <div className=" text-right font-medium col-start-2 col-span-3">
+                {danceClass.classname}
               </div>
-            ) : (
-              ""
-            )}
-            <div
-              className={cn(
-                "flex justify-end text-right font-semibold text-gray-600",
-                isSearchTerm
-                  ? "col-start-3 col-span-1"
-                  : "col-start-2 col-span-2"
-              )}
-            >
-              {danceClass.instructor}
             </div>
+            <div className="text-sm grid grid-cols-3 gap-2">
+              <div className="text-gray-500">{danceClass.length}</div>
+              {isSearchTerm ? (
+                <div className=" text-center text-gray-500">
+                  {formatDate(danceClass.date)}
+                </div>
+              ) : (
+                ""
+              )}
+              <div
+                className={cn(
+                  "flex justify-end text-right font-semibold text-gray-600",
+                  isSearchTerm
+                    ? "col-start-3 col-span-1"
+                    : "col-start-2 col-span-2"
+                )}
+              >
+                {danceClass.instructor}
+              </div>
+            </div>
+            <Separator key={danceClass.class_id} className="mt-2" />
           </div>
-          <Separator key={danceClass.class_id} className="mt-2" />
-        </div>
-      ))}
-    </div>
-  </ScrollArea>
-);
+        ))}
+      </div>
+    </ScrollArea>
+  );
+};
 
 export default ClassScrollBar;
