@@ -16,30 +16,7 @@ const App = () => {
   return (
     <main className="min-h-screen flex flex-col w-full">
       <div className="text-center p-3 max-md:p-2">
-        <p className="text-2xl max-md:text-sm font-bold">ClassConnect</p>
-      </div>
-      <div
-        id="navbar"
-        className="text-center flex justify-center gap-6 w-full overflow-x-auto max-md:gap-2 max-md:p-2"
-      >
-        <Button
-          className="bg-gradient-to-t from-gray-800 to-red-800"
-          size="xlg"
-        >
-          MDC
-        </Button>
-        <Button
-          className="bg-gradient-to-t from-red-800 to-gray-800"
-          size="xlg"
-        >
-          TMILLY
-        </Button>
-        <Button
-          className="bg-gradient-to-t from-green-800 to-gray-600"
-          size="xlg"
-        >
-          ML
-        </Button>
+        <p className="text-4xl max-md:text-3xl font-bold">ClassConnect</p>
       </div>
       <Search
         searchTerm={searchTerm}

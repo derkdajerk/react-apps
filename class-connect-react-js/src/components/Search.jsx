@@ -11,7 +11,7 @@ import React from "react";
 const Search = ({ searchTerm, setSearchTerm }) => {
   // searchTerm = 'i a, batmand not' // dont do this
   return (
-    <div className="flex w-full mt-5">
+    <div className="flex w-full">
       <input
         className="bg-gray-300 w-full px-4 py-3 rounded-lg max-w-3xl mx-auto"
         type="text"
