@@ -196,9 +196,24 @@ const AllPageContent = ({ searchTerm }) => {
     }
   };
 
+  const [studioVisibility, setStudioVisibility] = useState({
+    MDC: true,
+    TMILLY: true,
+    ML: true,
+    PLAYGROUND: false,
+    EIGHTYEIGHT: false,
+  });
+
+  const handleVisibilityChange = (studioName, isVisible) => {
+    setStudioVisibility((prev) => ({
+      ...prev,
+      [studioName]: isVisible,
+    }));
+  };
+
   return (
     <div className="flex flex-col items-center w-full mx-auto px-4 max-md:px-2">
-      <ClassCheckBoxs />
+      <ClassCheckBoxs onVisibilityChange={handleVisibilityChange} />
       <Pagination className="mt-5">
         <DateNavigation
           dates={dates}
@@ -225,6 +240,7 @@ const AllPageContent = ({ searchTerm }) => {
         danceClassML={danceClassML}
         danceClassEIGHTYEIGHT={danceClassEIGHTYEIGHT}
         danceClassPLAYGROUND={danceClassPLAYGROUND}
+        studioVisibility={studioVisibility}
         searchTerm={searchTerm}
       />
     </div>
