@@ -8,6 +8,7 @@ import {
   fetchStudioClassesBySearchAndTime,
   fetchStudioClassesByDateAndTime,
 } from "./SupabaseCalls";
+import ClassCheckBoxs from "./ClassCheckBoxs";
 import { TimeRangeSelector } from "./TimeRangeSelector";
 
 const AllPageContent = ({ searchTerm }) => {
@@ -197,6 +198,7 @@ const AllPageContent = ({ searchTerm }) => {
 
   return (
     <div className="flex flex-col items-center w-full mx-auto px-4 max-md:px-2">
+      <ClassCheckBoxs />
       <Pagination className="mt-5">
         <DateNavigation
           dates={dates}

@@ -17,7 +17,7 @@ const DateNavigation = ({
   isPreviousDisabled,
   isNextDisabled,
 }) => (
-  <Pagination className="mt-5">
+  <Pagination className="">
     <PaginationContent className="gap-4 max-md:gap-2 bg-gray-300/20 rounded-3xl overflow-x-auto">
       <PaginationPrevious
         onClick={() => !isPreviousDisabled() && onPrevious()}
