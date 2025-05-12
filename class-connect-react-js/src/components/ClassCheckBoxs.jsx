@@ -4,6 +4,7 @@ const classList = ["MDC", "TMILLY", "ML", "PLAYGROUND", "EIGHTYEIGHT"];
 
 export default function ClassCheckBoxes({ onVisibilityChange }) {
   return (
+    // want to make check boxes bigger when on phone so classname="max-sm:text-lg"
     <div className="grid grid-cols-6 gap-4 mt-5">
       {classList.map((studioName, idx) => (
         <div
