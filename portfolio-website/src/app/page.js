@@ -112,7 +112,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         <section id="about" className="mt-12">
           <h2 className="text-3xl mb-4 font-header">About Me</h2>
           <div className="flex items-center space-x-4">
