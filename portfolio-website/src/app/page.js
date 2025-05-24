@@ -74,9 +74,9 @@ export default function Home() {
 
   return (
     <div>
-      <header className="fixed top-0 left-0 w-full bg-red bg-opacity-50 backdrop-blur-md p-4 flex justify-center space-x-8 font-header transition-all duration-300 z-10">
-        <a href="#projects" className="hover:underline">
-          Projects
+      <header className="fixed top-0 left-0 w-full bg-re bg-red-500 bg-opacity-50 backdrop-blur-md p-4 flex justify-center space-x-8 font-header transition-all duration-300 z-10">
+        <a href="#projects" className=" text-blue hover:underline">
+          Projectsasd
         </a>
         <a href="#about" className="hover:underline">
           About
@@ -122,7 +122,7 @@ export default function Home() {
               alt="Profile"
               className="w-24 h-24 rounded-full"
             />
-            <p className="max-w-xl">
+            <p className="max-w-xl bg-red-500">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
               nec odio. Praesent libero. Sed cursus ante dapibus diam.
             </p>
