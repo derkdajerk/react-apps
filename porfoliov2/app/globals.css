@@ -35,6 +35,7 @@ body {
 
 .tab {
   position: relative;
+  outline: black 2 solid;
   background-color: #f4e4bc;
   padding: 8px 16px;
   display: inline-block;
@@ -46,12 +47,14 @@ body {
 }
 
 .tab:hover {
+  outline: black 2 solid;
   filter: brightness(0.95);
   transform: translateY(-1px);
-  z-index: 2;
+  z-index: 4;
 }
 
 .tab.active {
+  outline: black 2 solid;
   background-color: #e6d4a7;
   z-index: 3;
 }

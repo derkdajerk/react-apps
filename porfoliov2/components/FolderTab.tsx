@@ -15,9 +15,7 @@ export const FolderTab: React.FC<FolderTabProps> = ({
 }) => {
   return (
     <button
-      className={`tab font-folder focus:outline-none text-left ${
-        isActive ? "active" : ""
-      }`}
+      className={`tab font-folder text-left ${isActive ? "active" : ""}`}
       onClick={onSelect}
     >
       {title}

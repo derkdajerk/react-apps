@@ -15,6 +15,9 @@ const App = () => {
 
   return (
     <main className="min-h-screen flex flex-col w-full">
+      <div id="login" className="bg-red-900">
+        test
+      </div>
       <div className="text-center p-3 max-md:p-2">
         <p className="text-4xl max-md:text-3xl font-bold">ClassConnect</p>
       </div>

@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import FolderTab from "../components/FolderTab";
+import { Button } from "@/components/ui/button";
 
 interface Project {
   title: string;
@@ -79,22 +80,28 @@ export default function Home() {
   return (
     <>
       <div>
-        <header className="fixed top-0 left-0 w-full bg-re bg-red-500 bg-opacity-50 backdrop-blur-md p-4 flex justify-center space-x-8 font-header transition-all duration-300 z-10">
+        <header className="fixed top-0 left-0 right-0 bg-opacity-50 backdrop-blur-md p-1 flex justify-center space-x-8 font-header transition-all duration-300 z-10">
           <a href="#projects" className=" text-blue hover:underline">
-            Projectsasd
+            <Button size={"lg"} variant={"outline"}>
+              Projects
+            </Button>
           </a>
           <a href="#about" className="hover:underline">
-            About
+            <Button size={"lg"} variant={"outline"}>
+              About
+            </Button>
           </a>
           <a href="#contact" className="hover:underline">
-            Contact
+            <Button size={"lg"} variant={"outline"}>
+              Contact
+            </Button>
           </a>
         </header>
 
         <main className="pt-24 px-4 max-w-7xl mx-auto">
           <section id="projects">
             <h2 className="text-3xl mb-4 font-header">Projects</h2>
-            <div className="shelf p-4 rounded-md">
+            <div className="shelf p-4 rounded-md outline-black outline-4">
               <div className="relative">
                 <div className="flex flex-row space-x-[-5px]">
                   {projects.map((p) => (
@@ -127,9 +134,12 @@ export default function Home() {
                 alt="Profile"
                 className="w-24 h-24 rounded-full"
               />
-              <p className="max-w-xl bg-red-500">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-                nec odio. Praesent libero. Sed cursus ante dapibus diam.
+              <p className="text-center p-2 max-w-xl bg-white bg-opacity-55 rounded-3xl">
+                Current computer programming student with practical experience
+                in front-end development using React, Python, and Java. I enjoy
+                solving real problems and take pride in building things from the
+                ground up. Quick to learn, focused on efficiency, and most
+                motivated when tackling challenges I genuinely care about.
               </p>
             </div>
           </section>
