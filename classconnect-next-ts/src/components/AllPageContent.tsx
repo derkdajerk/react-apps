@@ -108,6 +108,18 @@ const AllPageContent = ({ searchTerm }: AllPageContentProps) => {
     }
   }, [selectedIndex, dates]); // Add this useEffect to handle date changes
 
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      loadClassesBySearchAndTime(searchTerm);
+    } else {
+      // If search is cleared, load classes for current selected date
+      if (dates[selectedIndex]) {
+        const formattedDate = formatDate(dates[selectedIndex]);
+        loadClassesByDateAndTime(formattedDate);
+      }
+    }
+  }, [searchTerm]); // Add searchTerm as dependency
+
   const formatDate = (date: Date): string => {
     const localDate = new Date(date);
     return localDate.toLocaleDateString("en-CA");
@@ -115,8 +127,11 @@ const AllPageContent = ({ searchTerm }: AllPageContentProps) => {
 
   const handleDateClick = (index: number): void => {
     setSelectedIndex(index);
-    const formattedDate = formatDate(dates[index]);
-    loadClassesByDateAndTime(formattedDate);
+    if (!searchTerm.trim()) {
+      // Only load date-specific classes if there's no search term
+      const formattedDate = formatDate(dates[index]);
+      loadClassesByDateAndTime(formattedDate);
+    }
   };
 
   const handlePreviousClick = (): void => {
@@ -190,6 +205,7 @@ const AllPageContent = ({ searchTerm }: AllPageContentProps) => {
 
   const loadClassesByDateAndTime = async (date: string): Promise<void> => {
     setIsLoading(true);
+    console.log(`loadclassesbydateandtime: ${timeRange.start}`);
     try {
       const [
         mdcClasses,
@@ -216,17 +232,80 @@ const AllPageContent = ({ searchTerm }: AllPageContentProps) => {
     }
   };
 
-  const handleTimeChange = ({ start, end }: TimeRange): void => {
-    setTimeRange({ start, end });
-    console.log(`start: ${start} end: ${end}`);
+  const loadClassesByDateAndTimeWithRange = async (
+    date: string,
+    timeRange: TimeRange
+  ): Promise<void> => {
+    setIsLoading(true);
+    try {
+      const [
+        mdcClasses,
+        tmillyClasses,
+        mlClasses,
+        eightyeightClasses,
+        playgroundClasses,
+      ] = await Promise.all([
+        fetchStudioClassesByDateAndTime("MDC", date, timeRange),
+        fetchStudioClassesByDateAndTime("TMILLY", date, timeRange),
+        fetchStudioClassesByDateAndTime("ML", date, timeRange),
+        fetchStudioClassesByDateAndTime("EIGHTYEIGHT", date, timeRange),
+        fetchStudioClassesByDateAndTime("PLAYGROUND", date, timeRange),
+      ]);
+      setDanceClassMDC(mdcClasses);
+      setDanceClassTMILLY(tmillyClasses);
+      setDanceClassML(mlClasses);
+      setDanceClassEIGHTYEIGHT(eightyeightClasses);
+      setDanceClassPLAYGROUND(playgroundClasses);
+    } catch (error) {
+      console.error(`Error fetching classes: ${error}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    if ((start && end) || (start === "" && end === "")) {
-      if (searchTerm) {
-        loadClassesBySearchAndTime(searchTerm);
-      } else if (dates.length > 0 && dates[selectedIndex]) {
-        const formattedDate = dates[selectedIndex].toLocaleDateString("en-CA");
-        loadClassesByDateAndTime(formattedDate);
-      }
+  const loadClassesBySearchAndTimeWithRange = async (
+    searchTerm: string,
+    timeRange: TimeRange
+  ): Promise<void> => {
+    setIsLoading(true);
+    try {
+      const [
+        mdcClasses,
+        tmillyClasses,
+        mlClasses,
+        eightyeightClasses,
+        playgroundClasses,
+      ] = await Promise.all([
+        fetchStudioClassesBySearchAndTime("MDC", searchTerm, timeRange),
+        fetchStudioClassesBySearchAndTime("TMILLY", searchTerm, timeRange),
+        fetchStudioClassesBySearchAndTime("ML", searchTerm, timeRange),
+        fetchStudioClassesBySearchAndTime("EIGHTYEIGHT", searchTerm, timeRange),
+        fetchStudioClassesBySearchAndTime("PLAYGROUND", searchTerm, timeRange),
+      ]);
+      setDanceClassMDC(mdcClasses);
+      setDanceClassTMILLY(tmillyClasses);
+      setDanceClassML(mlClasses);
+      setDanceClassEIGHTYEIGHT(eightyeightClasses);
+      setDanceClassPLAYGROUND(playgroundClasses);
+    } catch (error) {
+      console.error(`Error finding teacher: ${error}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTimeChange = ({ start, end }: TimeRange): void => {
+    // Update timeRange state first
+    setTimeRange({ start, end });
+
+    // Use the new values directly instead of depending on state update
+    const newTimeRange = { start, end };
+
+    if (searchTerm.trim()) {
+      loadClassesBySearchAndTimeWithRange(searchTerm, newTimeRange);
+    } else {
+      const formattedDate = formatDate(dates[selectedIndex]);
+      loadClassesByDateAndTimeWithRange(formattedDate, newTimeRange);
     }
   };
 
@@ -259,7 +338,7 @@ const AllPageContent = ({ searchTerm }: AllPageContentProps) => {
         <TimeRangeSelector onTimeChange={handleTimeChange} />
       </div>
 
-      <div className="flex justify-center w-full mb-2">
+      <div className="flex justify-center w-full mb-2 mt-2">
         {isLoading && <Progress value={progress} />}
       </div>
 

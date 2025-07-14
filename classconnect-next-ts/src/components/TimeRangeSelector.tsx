@@ -70,18 +70,14 @@ export function TimeRangeSelector({
     const newStartValue = currentValue === startValue ? "" : currentValue;
 
     if (endValue && !isValidTimeRange(newStartValue, endValue)) {
-      toast.error("Start time must be before end time", {
-        description: "Please select a valid time range",
-      });
+      toast.error("Start time must be before end time");
       return;
     }
 
     setStartValue(newStartValue);
     setStartOpen(false);
-    if (
-      (newStartValue && endValue) ||
-      (newStartValue === "" && endValue === "")
-    ) {
+    // Only trigger if we have both times or clearing both
+    if (endValue || newStartValue === "") {
       onTimeChange({ start: newStartValue, end: endValue });
     }
   };
@@ -90,18 +86,14 @@ export function TimeRangeSelector({
     const newEndValue = currentValue === endValue ? "" : currentValue;
 
     if (startValue && !isValidTimeRange(startValue, newEndValue)) {
-      toast.error("End time must be after start time", {
-        description: "Please select a valid time range",
-      });
+      toast.error("End time must be after start time");
       return;
     }
 
     setEndValue(newEndValue);
     setEndOpen(false);
-    if (
-      (startValue && newEndValue) ||
-      (startValue === "" && newEndValue === "")
-    ) {
+    // Only trigger if we have both times or clearing both
+    if (startValue || newEndValue === "") {
       onTimeChange({ start: startValue, end: newEndValue });
     }
   };
@@ -109,7 +101,8 @@ export function TimeRangeSelector({
   const clearTimeRange = (): void => {
     setStartValue("");
     setEndValue("");
-    onTimeChange({ start: "", end: "" }); // This triggers reloading all classes
+    // Immediately trigger with empty values
+    onTimeChange({ start: "", end: "" });
   };
 
   return (
@@ -206,7 +199,7 @@ export function TimeRangeSelector({
       <div className="flex gap-4 justify-center mt-2">
         <Button
           variant="secondary"
-          className="bg-gray-400 hover:bg-gray-500 hover:font-bold"
+          className="bg-gray-400 hover:bg-gray-500 hover:font-bold cursor-pointer"
           onClick={clearTimeRange}
         >
           Clear

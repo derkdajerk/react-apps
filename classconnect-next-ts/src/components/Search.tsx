@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
+import { Button } from "./ui/button";
 
 // const person = {
 //     name: "John",
@@ -15,17 +16,28 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = ({ searchTerm, setSearchTerm }) => {
+  const clearSearchTerm = () => {
+    setSearchTerm("");
+  };
+
   return (
-    <div className="flex w-full">
+    <div className="flex w-full mx-auto justify-center">
       <input
-        className="bg-gray-300 w-full px-4 py-3 rounded-lg max-w-3xl mx-auto"
+        className="bg-gray-300 w-full px-4 py-3 rounded-lg max-w-3xl"
         type="text"
-        placeholder="Search Teachers/Classes"
+        placeholder="Search Teachers/Classes/Styles"
         value={searchTerm}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           setSearchTerm(event.target.value)
         }
       />
+      <Button
+        variant="secondary"
+        className="bg-gray-400 hover:bg-gray-500 hover:font-bold my-auto cursor-pointer"
+        onClick={clearSearchTerm}
+      >
+        Clear
+      </Button>
     </div>
   );
 };
