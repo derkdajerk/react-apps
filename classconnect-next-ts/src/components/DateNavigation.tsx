@@ -9,7 +9,17 @@ import {
 import React from "react";
 import { cn } from "../lib/utils";
 
-const DateNavigation = ({
+interface DateNavigationProps {
+  dates: Date[];
+  selectedIndex: number;
+  onDateClick: (index: number, date: Date) => void;
+  onPrevious: () => void;
+  onNext: () => void;
+  isPreviousDisabled: () => boolean;
+  isNextDisabled: () => boolean;
+}
+
+const DateNavigation: React.FC<DateNavigationProps> = ({
   dates,
   selectedIndex,
   onDateClick,

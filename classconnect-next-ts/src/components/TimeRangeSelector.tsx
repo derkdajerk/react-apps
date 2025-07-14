@@ -1,6 +1,5 @@
 import * as React from "react";
-
-import { useMemo } from "react";
+import { JSX, useMemo } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -19,8 +18,22 @@ import {
 } from "@/components/ui/popover";
 import { toast } from "sonner";
 
-const generateTimes = () => {
-  const timesList = [];
+interface TimeOption {
+  value: string;
+  label: string;
+}
+
+interface TimeRange {
+  start: string;
+  end: string;
+}
+
+interface TimeRangeSelectorProps {
+  onTimeChange: (timeRange: TimeRange) => void;
+}
+
+const generateTimes = (): TimeOption[] => {
+  const timesList: TimeOption[] = [];
   for (let i = 15; i < 47; i++) {
     const hour = Math.floor(i / 2);
     const minutes = i % 2 === 0 ? "00" : "30";
@@ -38,20 +51,22 @@ const generateTimes = () => {
   return timesList;
 };
 
-const isValidTimeRange = (start, end) => {
+const isValidTimeRange = (start: string, end: string): boolean => {
   if (!start || !end) return true;
   return start < end;
 };
 
-export function TimeRangeSelector({ onTimeChange }) {
-  const [startOpen, setStartOpen] = React.useState(false);
-  const [endOpen, setEndOpen] = React.useState(false);
-  const [startValue, setStartValue] = React.useState("");
-  const [endValue, setEndValue] = React.useState("");
+export function TimeRangeSelector({
+  onTimeChange,
+}: TimeRangeSelectorProps): JSX.Element {
+  const [startOpen, setStartOpen] = React.useState<boolean>(false);
+  const [endOpen, setEndOpen] = React.useState<boolean>(false);
+  const [startValue, setStartValue] = React.useState<string>("");
+  const [endValue, setEndValue] = React.useState<string>("");
 
-  const timeOptions = useMemo(() => generateTimes(), []);
+  const timeOptions = useMemo<TimeOption[]>(() => generateTimes(), []);
 
-  const handleStartTimeSelect = (currentValue) => {
+  const handleStartTimeSelect = (currentValue: string): void => {
     const newStartValue = currentValue === startValue ? "" : currentValue;
 
     if (endValue && !isValidTimeRange(newStartValue, endValue)) {
@@ -71,7 +86,7 @@ export function TimeRangeSelector({ onTimeChange }) {
     }
   };
 
-  const handleEndTimeSelect = (currentValue) => {
+  const handleEndTimeSelect = (currentValue: string): void => {
     const newEndValue = currentValue === endValue ? "" : currentValue;
 
     if (startValue && !isValidTimeRange(startValue, newEndValue)) {
@@ -91,11 +106,10 @@ export function TimeRangeSelector({ onTimeChange }) {
     }
   };
 
-  const clearTimeRange = () => {
+  const clearTimeRange = (): void => {
     setStartValue("");
     setEndValue("");
-    // Always notify parent when clearing
-    onTimeChange({ start: "", end: "" });
+    onTimeChange({ start: "", end: "" }); // This triggers reloading all classes
   };
 
   return (
@@ -107,7 +121,7 @@ export function TimeRangeSelector({ onTimeChange }) {
             <Button
               variant="outline"
               role="combobox"
-              aria-expanded={open}
+              aria-expanded={startOpen}
               className="w-[200px] justify-between"
             >
               {startValue
@@ -151,7 +165,7 @@ export function TimeRangeSelector({ onTimeChange }) {
             <Button
               variant="outline"
               role="combobox"
-              aria-expanded={open}
+              aria-expanded={startOpen}
               className="w-[200px] justify-between"
             >
               {endValue

@@ -1,12 +1,26 @@
 import { Checkbox } from "./ui/checkbox";
 import React from "react";
-const classList = ["MDC", "TMILLY", "ML", "PLAYGROUND", "EIGHTYEIGHT"];
 
-export default function ClassCheckBoxes({ onVisibilityChange }) {
+// Define studio names as constant to ensure type safety
+const STUDIO_NAMES = [
+  "MDC",
+  "TMILLY",
+  "ML",
+  "PLAYGROUND",
+  "EIGHTYEIGHT",
+] as const;
+type StudioName = (typeof STUDIO_NAMES)[number];
+
+interface ClassCheckBoxesProps {
+  onVisibilityChange: (studioName: StudioName, checked: boolean) => void;
+}
+
+export default function ClassCheckBoxes({
+  onVisibilityChange,
+}: ClassCheckBoxesProps) {
   return (
-    // want to make check boxes bigger when on phone so classname="max-sm:text-lg"
     <div className="grid grid-cols-6 gap-4 mt-5">
-      {classList.map((studioName, idx) => (
+      {STUDIO_NAMES.map((studioName, idx) => (
         <div
           key={studioName}
           className={`flex items-center space-x-2 ${
@@ -16,7 +30,7 @@ export default function ClassCheckBoxes({ onVisibilityChange }) {
           <Checkbox
             id={studioName}
             defaultChecked={idx < 3}
-            onCheckedChange={(checked) =>
+            onCheckedChange={(checked: boolean) =>
               onVisibilityChange(studioName, checked)
             }
           />

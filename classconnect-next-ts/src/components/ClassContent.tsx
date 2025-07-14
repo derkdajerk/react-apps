@@ -1,6 +1,26 @@
-import ClassScrollBar from "@/components/ClassScrollBar.jsx";
+import ClassScrollBar from "@/components/ClassScrollBar";
 import React from "react";
-const ClassContent = ({
+import { DanceClass } from "../lib/danceclass";
+
+interface StudioVisibility {
+  MDC: boolean;
+  TMILLY: boolean;
+  ML: boolean;
+  PLAYGROUND: boolean;
+  EIGHTYEIGHT: boolean;
+}
+
+interface ClassContentProps {
+  danceClassMDC: DanceClass[];
+  danceClassTMILLY: DanceClass[];
+  danceClassML: DanceClass[];
+  danceClassEIGHTYEIGHT: DanceClass[];
+  danceClassPLAYGROUND: DanceClass[];
+  searchTerm: string;
+  studioVisibility: StudioVisibility;
+}
+
+const ClassContent: React.FC<ClassContentProps> = ({
   danceClassMDC,
   danceClassTMILLY,
   danceClassML,

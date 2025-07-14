@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 // const person = {
 //     name: "John",
@@ -8,8 +8,13 @@ import React from "react";
 //  De structure the object ^
 // const {name, age, location} = person;
 // de structures the props given through the values in its called component function
-const Search = ({ searchTerm, setSearchTerm }) => {
-  // searchTerm = 'i a, batmand not' // dont do this
+interface SearchProps {
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+  className?: string; // Make className optional with '?'
+}
+
+const Search: React.FC<SearchProps> = ({ searchTerm, setSearchTerm }) => {
   return (
     <div className="flex w-full">
       <input
@@ -17,9 +22,12 @@ const Search = ({ searchTerm, setSearchTerm }) => {
         type="text"
         placeholder="Search Teachers/Classes"
         value={searchTerm}
-        onChange={(event) => setSearchTerm(event.target.value)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          setSearchTerm(event.target.value)
+        }
       />
     </div>
   );
 };
+
 export default Search;

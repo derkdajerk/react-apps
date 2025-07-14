@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import React from "react";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Pagination } from "@/components/ui/pagination";
@@ -11,33 +11,75 @@ import {
 } from "./SupabaseCalls";
 import ClassCheckBoxs from "./ClassCheckBoxs";
 import { TimeRangeSelector } from "./TimeRangeSelector";
+import { DanceClass } from "../lib/danceclass";
 
-const AllPageContent = ({ searchTerm }) => {
+interface AllPageContentProps {
+  searchTerm: string;
+}
+
+interface TimeRange {
+  start: string;
+  end: string;
+}
+
+interface StudioVisibility {
+  MDC: boolean;
+  TMILLY: boolean;
+  ML: boolean;
+  PLAYGROUND: boolean;
+  EIGHTYEIGHT: boolean;
+}
+
+const AllPageContent = ({ searchTerm }: AllPageContentProps) => {
   const today = new Date();
   const endOfWeek = new Date(today);
   endOfWeek.setDate(today.getDate() + 6);
 
-  const [dates, setDates] = useState([]);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [currentWeekStartDate, setCurrentWeekStartDate] = useState(today);
-  const [currentWeekEndDate, setCurrentWeekEndDate] = useState(endOfWeek);
-  const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [danceClassMDC, setDanceClassMDC] = useState([]);
-  const [danceClassTMILLY, setDanceClassTMILLY] = useState([]);
-  const [danceClassML, setDanceClassML] = useState([]);
-  const [danceClassEIGHTYEIGHT, setDanceClassEIGHTYEIGHT] = useState([]);
-  const [danceClassPLAYGROUND, setDanceClassPLAYGROUND] = useState([]);
-  const [timeRange, setTimeRange] = useState({ start: "", end: "" });
+  // State declarations with proper types
+  const [dates, setDates] = useState<Date[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [currentWeekStartDate, setCurrentWeekStartDate] = useState<Date>(today);
+  const [currentWeekEndDate, setCurrentWeekEndDate] = useState<Date>(endOfWeek);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [danceClassMDC, setDanceClassMDC] = useState<DanceClass[]>([]);
+  const [danceClassTMILLY, setDanceClassTMILLY] = useState<DanceClass[]>([]);
+  const [danceClassML, setDanceClassML] = useState<DanceClass[]>([]);
+  const [danceClassEIGHTYEIGHT, setDanceClassEIGHTYEIGHT] = useState<
+    DanceClass[]
+  >([]);
+  const [danceClassPLAYGROUND, setDanceClassPLAYGROUND] = useState<
+    DanceClass[]
+  >([]);
+  const [timeRange, setTimeRange] = useState<TimeRange>({ start: "", end: "" });
+  const [studioVisibility, setStudioVisibility] = useState<StudioVisibility>({
+    MDC: true,
+    TMILLY: true,
+    ML: true,
+    PLAYGROUND: false,
+    EIGHTYEIGHT: false,
+  });
+
+  const weekDates = useMemo<Date[]>(() => {
+    return Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(currentWeekStartDate);
+      date.setDate(currentWeekStartDate.getDate() + i);
+      return date;
+    });
+  }, [currentWeekStartDate]);
 
   useEffect(() => {
-    let intervalId;
+    setDates(weekDates);
+  }, [weekDates]);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | undefined;
     if (isLoading) {
       setProgress(0);
       intervalId = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 90) {
-            clearInterval(intervalId);
+            if (intervalId) clearInterval(intervalId);
             return 90;
           }
           return prev + 10;
@@ -51,43 +93,33 @@ const AllPageContent = ({ searchTerm }) => {
     };
   }, [isLoading]);
 
-  const weekDates = useMemo(() => {
-    return Array.from({ length: 7 }, (_, i) => {
-      const date = new Date(currentWeekStartDate);
-      date.setDate(currentWeekStartDate.getDate() + i);
-      return date;
-    });
-  }, [currentWeekStartDate]);
-
+  // Add this after other useEffects
   useEffect(() => {
-    setDates(weekDates);
-  }, [weekDates]);
-
-  useEffect(() => {
-    // Only proceed if the time range is complete (both selected or both cleared).
-    if (
-      (timeRange.start && timeRange.end) ||
-      (timeRange.start === "" && timeRange.end === "")
-    ) {
-      if (searchTerm && searchTerm.trim() !== "") {
-        loadClassesBySearchAndTime(searchTerm, timeRange);
-      } else if (dates.length > 0 && dates[selectedIndex]) {
-        const formattedDate = formatDate(dates[selectedIndex]);
-        loadClassesByDateAndTime(formattedDate, timeRange);
-      }
+    if (dates.length > 0) {
+      const formattedDate = formatDate(dates[selectedIndex]);
+      loadClassesByDateAndTime(formattedDate);
     }
-  }, [timeRange, searchTerm, dates, selectedIndex]);
+  }, [dates]); // This will load initial data when dates are set
 
-  const formatDate = (date) => {
+  useEffect(() => {
+    if (dates[selectedIndex]) {
+      const formattedDate = formatDate(dates[selectedIndex]);
+      loadClassesByDateAndTime(formattedDate);
+    }
+  }, [selectedIndex, dates]); // Add this useEffect to handle date changes
+
+  const formatDate = (date: Date): string => {
     const localDate = new Date(date);
     return localDate.toLocaleDateString("en-CA");
   };
 
-  const handleDateClick = (index) => {
+  const handleDateClick = (index: number): void => {
     setSelectedIndex(index);
+    const formattedDate = formatDate(dates[index]);
+    loadClassesByDateAndTime(formattedDate);
   };
 
-  const handlePreviousClick = () => {
+  const handlePreviousClick = (): void => {
     const newStart = new Date(currentWeekStartDate);
     newStart.setDate(currentWeekStartDate.getDate() - 7);
     const newEnd = new Date(currentWeekEndDate);
@@ -98,7 +130,7 @@ const AllPageContent = ({ searchTerm }) => {
     setSelectedIndex(0);
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = (): void => {
     const newStart = new Date(currentWeekStartDate);
     newStart.setDate(currentWeekStartDate.getDate() + 7);
     const newEnd = new Date(currentWeekEndDate);
@@ -109,7 +141,7 @@ const AllPageContent = ({ searchTerm }) => {
     setSelectedIndex(0);
   };
 
-  const isPreviousDisabled = useCallback(() => {
+  const isPreviousDisabled = useCallback((): boolean => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -119,14 +151,16 @@ const AllPageContent = ({ searchTerm }) => {
     return weekStartDate.getTime() <= today.getTime();
   }, [currentWeekStartDate]);
 
-  const isNextDisabled = useCallback(() => {
+  const isNextDisabled = useCallback((): boolean => {
     const threeWeeksFromToday = new Date(today);
-    threeWeeksFromToday.setDate(today.getDate() + 14); // 3 weeks * 7 days
+    threeWeeksFromToday.setDate(today.getDate() + 14);
 
     return currentWeekEndDate.getTime() >= threeWeeksFromToday.getTime();
   }, [currentWeekEndDate]);
 
-  const loadClassesBySearchAndTime = async (searchTerm) => {
+  const loadClassesBySearchAndTime = async (
+    searchTerm: string
+  ): Promise<void> => {
     setIsLoading(true);
     try {
       const [
@@ -154,7 +188,7 @@ const AllPageContent = ({ searchTerm }) => {
     }
   };
 
-  const loadClassesByDateAndTime = async (date) => {
+  const loadClassesByDateAndTime = async (date: string): Promise<void> => {
     setIsLoading(true);
     try {
       const [
@@ -182,11 +216,10 @@ const AllPageContent = ({ searchTerm }) => {
     }
   };
 
-  const handleTimeChange = ({ start, end }) => {
+  const handleTimeChange = ({ start, end }: TimeRange): void => {
     setTimeRange({ start, end });
     console.log(`start: ${start} end: ${end}`);
 
-    // Only reload if both times are set or both are cleared
     if ((start && end) || (start === "" && end === "")) {
       if (searchTerm) {
         loadClassesBySearchAndTime(searchTerm);
@@ -197,15 +230,10 @@ const AllPageContent = ({ searchTerm }) => {
     }
   };
 
-  const [studioVisibility, setStudioVisibility] = useState({
-    MDC: true,
-    TMILLY: true,
-    ML: true,
-    PLAYGROUND: false,
-    EIGHTYEIGHT: false,
-  });
-
-  const handleVisibilityChange = (studioName, isVisible) => {
+  const handleVisibilityChange = (
+    studioName: keyof StudioVisibility,
+    isVisible: boolean
+  ): void => {
     setStudioVisibility((prev) => ({
       ...prev,
       [studioName]: isVisible,
