@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import React from "react";
 import { DanceClass } from "../lib/danceclass";
 
 interface TimeRange {
@@ -8,7 +7,8 @@ interface TimeRange {
 }
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? null;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? null;
+const supabaseKey =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY ?? null;
 
 if (!supabaseUrl || !supabaseKey) {
   throw new Error("Missing Supabase environment variables");
